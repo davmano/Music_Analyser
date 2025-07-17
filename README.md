@@ -63,6 +63,8 @@ We DevOpsify the app in structured phases:
 
 ### ✅ Phase 4: Continuous Integration (CI) with GitHub Actions
 
+[![CI](https://github.com/davmano/Music_Analyser/actions/workflows/ci.yml/badge.svg)](https://github.com/davmano/Music_Analyser/actions/workflows/ci.yml)
+
 * CI pipeline in `.github/workflows/ci.yaml`:
 
   * Builds Docker image `davmano/music-analyzer:v1`
