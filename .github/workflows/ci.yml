@@ -1,4 +1,4 @@
-name: CI Pipeline - Music Analyzer
+name: CI/CD Pipeline - Music Analyzer
 
 on:
   push:
