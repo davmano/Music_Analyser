@@ -6,7 +6,7 @@ RUN adduser -S nodejs -u 1001
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm ci --only=production && npm cache clean --force
+RUN npm install --only=production && npm cache clean --force
 
 COPY . .
 
