@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: music-analysis-mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password123
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - music-analysis-network
+
+  audio-analysis:
+    build: ./audio-analysis-service
+    container_name: music-analysis-audio
+    ports:
+      - "8001:8001"
+    environment:
+      - MONGODB_URL=mongodb://admin:password123@mongodb:27017/music_analysis?authSource=admin
+    depends_on:
+      - mongodb
+    networks:
+      - music-analysis-network
+    volumes:
+      - ./uploads:/app/uploads
+
+  backend:
+    build: ./backend
+    container_name: music-analysis-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - NODE_ENV=development
+      - MONGODB_URL=mongodb://admin:password123@mongodb:27017/music_analysis?authSource=admin
+      - AUDIO_SERVICE_URL=http://audio-analysis:8001
+      - JWT_SECRET=your-super-secret-jwt-key-change-in-production
+    depends_on:
+      - mongodb
+      - audio-analysis
+    networks:
+      - music-analysis-network
+
+  frontend:
+    build: ./frontend
+    container_name: music-analysis-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://localhost:8000
+    depends_on:
+      - backend
+    networks:
+      - music-analysis-network
+
+volumes:
+  mongodb_data:
+
+networks:
+  music-analysis-network:
+    driver: bridge

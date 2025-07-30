@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: music-analysis-dev
+  labels:
+    name: music-analysis-dev
+    environment: development
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: music-analysis-prod
+  labels:
+    name: music-analysis-prod
+    environment: production

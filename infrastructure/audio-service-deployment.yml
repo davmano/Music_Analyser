@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: audio-analysis-service
+  namespace: music-analysis-dev
+  labels:
+    app: audio-analysis-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: audio-analysis-service
+  template:
+    metadata:
+      labels:
+        app: audio-analysis-service
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        fsGroup: 1001
+      containers:
+      - name: audio-analysis-service
+        image: your-registry.com/music-analysis-audio:IMAGE_TAG
+        ports:
+        - containerPort: 8001
+        env:
+        - name: MONGODB_URL
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: mongodb-url
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
+        volumeMounts:
+        - name: tmp-volume
+          mountPath: /tmp
+        - name: uploads-volume
+          mountPath: /app/uploads
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8001
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8001
+          initialDelaySeconds: 5
+          periodSeconds: 5
+      volumes:
+      - name: tmp-volume
+        emptyDir: {}
+      - name: uploads-volume
+        emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: audio-analysis-service
+  namespace: music-analysis-dev
+spec:
+  selector:
+    app: audio-analysis-service
+  ports:
+  - port: 8001
+    targetPort: 8001
+  type: ClusterIP
