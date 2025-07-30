@@ -8,8 +8,8 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
 import Upload from './pages/Upload'
-import Analysis from './pages/Analysis'
-import Arrangements from './pages/Arrangements'
+import Analysis from './pages/Analysis.tsx'
+import Arrangements from './pages/Arrangements.tsx'
 import ProtectedRoute from './components/ProtectedRoute'
 
 function App() {

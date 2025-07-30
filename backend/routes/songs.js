@@ -37,9 +37,12 @@ router.post('/upload', auth, upload.single('audio'), async (req, res) => {
       return res.status(400).json({ error: 'Title is required' });
     }
 
+    const FormData = require('form-data');
     const formData = new FormData();
-    const blob = new Blob([req.file.buffer], { type: req.file.mimetype });
-    formData.append('file', blob, req.file.originalname);
+    formData.append('file', req.file.buffer, {
+      filename: req.file.originalname,
+      contentType: req.file.mimetype
+    });
 
     const token = req.headers.authorization;
 
@@ -48,8 +51,8 @@ router.post('/upload', auth, upload.single('audio'), async (req, res) => {
       formData,
       {
         headers: {
-          'Authorization': token,
-          'Content-Type': 'multipart/form-data'
+          ...formData.getHeaders(),
+          'Authorization': token
         },
         timeout: 120000
       }

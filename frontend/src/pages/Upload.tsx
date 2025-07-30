@@ -4,6 +4,7 @@ import { useDropzone } from 'react-dropzone'
 import axios from 'axios'
 import toast from 'react-hot-toast'
 import { Upload as UploadIcon, Music, FileAudio, X, Loader2 } from 'lucide-react'
+import { useAuthStore } from '../store/authStore'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
@@ -13,6 +14,7 @@ export default function Upload() {
   const [artist, setArtist] = useState('')
   const [uploading, setUploading] = useState(false)
   const navigate = useNavigate()
+  const { token } = useAuthStore()
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     if (acceptedFiles.length > 0) {
@@ -65,6 +67,7 @@ export default function Upload() {
       const response = await axios.post(`${API_URL}/api/songs/upload`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${token}`,
         },
         timeout: 120000
       })

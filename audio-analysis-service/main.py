@@ -47,6 +47,8 @@ class SectionInfo(BaseModel):
     confidence: float
 
 def verify_token(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    if credentials.scheme.lower() != "bearer":
+        raise HTTPException(status_code=403, detail="Invalid authentication scheme")
     return credentials.credentials
 
 def detect_key(y, sr):
