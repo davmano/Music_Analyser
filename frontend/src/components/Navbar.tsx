@@ -12,12 +12,12 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="bg-white shadow-sm border-b">
+    <nav className="bg-dark-800 shadow-xl border-b border-dark-600 backdrop-blur-sm animate-fade-in">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center h-16">
-          <Link to="/" className="flex items-center space-x-2">
-            <Music className="h-8 w-8 text-primary" />
-            <span className="text-xl font-bold text-gray-900">Music Analysis</span>
+          <Link to="/" className="flex items-center space-x-2 text-gradient hover:scale-105 transition-transform duration-300">
+            <Music className="h-8 w-8 text-gold-500" />
+            <span className="text-xl font-bold">Music Analysis</span>
           </Link>
 
           <div className="flex items-center space-x-6">
@@ -25,33 +25,33 @@ export default function Navbar() {
               <>
                 <Link
                   to="/dashboard"
-                  className="flex items-center space-x-1 text-gray-700 hover:text-primary transition-colors"
+                  className="nav-link flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-dark-700 transition-all duration-200"
                 >
                   <BarChart3 className="h-4 w-4" />
                   <span>Dashboard</span>
                 </Link>
                 <Link
                   to="/upload"
-                  className="flex items-center space-x-1 text-gray-700 hover:text-primary transition-colors"
+                  className="nav-link flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-dark-700 transition-all duration-200"
                 >
                   <Upload className="h-4 w-4" />
                   <span>Upload</span>
                 </Link>
                 <Link
                   to="/arrangements"
-                  className="flex items-center space-x-1 text-gray-700 hover:text-primary transition-colors"
+                  className="nav-link flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-dark-700 transition-all duration-200"
                 >
                   <Settings className="h-4 w-4" />
                   <span>Arrangements</span>
                 </Link>
                 <div className="flex items-center space-x-3">
-                  <div className="flex items-center space-x-1 text-gray-700">
+                  <div className="flex items-center space-x-2 text-gold-500 bg-dark-700 px-3 py-2 rounded-lg border border-gold-500/20">
                     <User className="h-4 w-4" />
-                    <span className="text-sm">{user?.username}</span>
+                    <span className="text-sm font-medium">{user?.username}</span>
                   </div>
                   <button
                     onClick={handleLogout}
-                    className="flex items-center space-x-1 text-gray-700 hover:text-red-600 transition-colors"
+                    className="flex items-center space-x-2 text-earth-300 hover:text-red-400 px-3 py-2 rounded-lg hover:bg-dark-700 transition-all duration-200"
                   >
                     <LogOut className="h-4 w-4" />
                     <span>Logout</span>
@@ -62,13 +62,13 @@ export default function Navbar() {
               <div className="flex items-center space-x-4">
                 <Link
                   to="/login"
-                  className="text-gray-700 hover:text-primary transition-colors"
+                  className="nav-link px-4 py-2 rounded-lg hover:bg-dark-700 transition-all duration-200"
                 >
                   Login
                 </Link>
                 <Link
                   to="/register"
-                  className="bg-primary text-white px-4 py-2 rounded-md hover:bg-primary/90 transition-colors"
+                  className="btn-primary"
                 >
                   Sign Up
                 </Link>

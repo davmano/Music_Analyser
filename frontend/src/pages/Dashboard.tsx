@@ -47,75 +47,79 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          Welcome back, {user?.username}!
-        </h1>
-        <p className="text-gray-600">
-          Here's an overview of your music analysis activity
-        </p>
-      </div>
+    <div className="min-h-screen bg-dark-900">
+      <div className="max-w-6xl mx-auto px-4 py-8">
+        <div className="mb-8 animate-fade-in">
+          <h1 className="text-4xl font-bold text-gradient mb-4">
+            Welcome back, {user?.username}!
+          </h1>
+          <p className="text-lg text-earth-300">
+            Here's an overview of your music analysis activity
+          </p>
+        </div>
 
-      <div className="grid md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white p-6 rounded-lg shadow-sm border">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Total Songs</p>
-              <p className="text-2xl font-bold text-gray-900">{songs.length}</p>
+        <div className="grid md:grid-cols-3 gap-6 mb-8 animate-slide-up">
+          <div className="card p-6 hover:shadow-glow-blue transition-all duration-300">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-semibold text-gold-500 mb-1">Total Songs</p>
+                <p className="text-3xl font-bold text-earth-100">{songs.length}</p>
+              </div>
+              <div className="p-3 bg-accent-blue-500/20 rounded-lg">
+                <Music className="h-8 w-8 text-accent-blue-500" />
+              </div>
             </div>
-            <div className="bg-primary/10 p-3 rounded-full">
-              <Music className="h-6 w-6 text-primary" />
+          </div>
+
+          <div className="card p-6 hover:shadow-glow-green transition-all duration-300">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-semibold text-gold-500 mb-1">Avg Tempo</p>
+                <p className="text-3xl font-bold text-earth-100">
+                  {songs.length > 0 
+                    ? Math.round(songs.reduce((acc, song) => acc + song.analysis.tempo, 0) / songs.length)
+                    : 0
+                  } BPM
+                </p>
+              </div>
+              <div className="p-3 bg-accent-green-500/20 rounded-lg">
+                <TrendingUp className="h-6 w-6 text-accent-green-500" />
+              </div>
+            </div>
+          </div>
+
+          <div className="card p-6 hover:shadow-glow-purple transition-all duration-300">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-semibold text-gold-500 mb-1">Avg Energy</p>
+                <p className="text-3xl font-bold text-earth-100">
+                  {songs.length > 0 
+                    ? (songs.reduce((acc, song) => acc + song.analysis.energy, 0) / songs.length * 100).toFixed(0)
+                    : 0
+                  }%
+                </p>
+              </div>
+              <div className="p-3 bg-accent-purple-500/20 rounded-lg">
+                <BarChart3 className="h-8 w-8 text-accent-purple-500" />
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-sm border">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Avg Tempo</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {songs.length > 0 
-                  ? Math.round(songs.reduce((acc, song) => acc + song.analysis.tempo, 0) / songs.length)
-                  : 0
-                } BPM
-              </p>
+        <div className="grid md:grid-cols-2 gap-8">
+          <div className="card p-6 animate-slide-up">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-gold-500 flex items-center">
+                <Music className="h-6 w-6 mr-2" />
+                Recent Songs
+              </h2>
+              <Link
+                to="/upload"
+                className="text-accent-blue-500 hover:text-accent-blue-400 text-sm font-semibold transition-colors duration-200"
+              >
+                Upload New
+              </Link>
             </div>
-            <div className="bg-green-100 p-3 rounded-full">
-              <TrendingUp className="h-6 w-6 text-green-600" />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white p-6 rounded-lg shadow-sm border">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600">Avg Energy</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {songs.length > 0 
-                  ? (songs.reduce((acc, song) => acc + song.analysis.energy, 0) / songs.length * 100).toFixed(0)
-                  : 0
-                }%
-              </p>
-            </div>
-            <div className="bg-orange-100 p-3 rounded-full">
-              <BarChart3 className="h-6 w-6 text-orange-600" />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="grid md:grid-cols-2 gap-8">
-        <div className="bg-white p-6 rounded-lg shadow-sm border">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold text-gray-900">Recent Songs</h2>
-            <Link
-              to="/upload"
-              className="text-primary hover:underline text-sm font-medium"
-            >
-              Upload New
-            </Link>
-          </div>
 
           {loading ? (
             <div className="space-y-3">
@@ -126,70 +130,82 @@ export default function Dashboard() {
                 </div>
               ))}
             </div>
-          ) : songs.length > 0 ? (
-            <div className="space-y-4">
-              {songs.map((song) => (
-                <div key={song._id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                  <div>
-                    <h3 className="font-medium text-gray-900">{song.title}</h3>
-                    <p className="text-sm text-gray-600">
-                      {song.artist || 'Unknown Artist'} • {song.analysis.key} • {Math.round(song.analysis.tempo)} BPM
-                    </p>
+            ) : songs.length > 0 ? (
+              <div className="space-y-4">
+                {songs.map((song) => (
+                  <div key={song._id} className="flex items-center justify-between p-4 bg-dark-700 rounded-lg border border-dark-500 hover:border-accent-blue-500/50 transition-all duration-200">
+                    <div className="flex items-center">
+                      <div className="p-2 bg-accent-blue-500/20 rounded-lg mr-3">
+                        <Music className="h-5 w-5 text-accent-blue-500" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-earth-100">{song.title}</h3>
+                        <p className="text-sm text-earth-400">
+                          {song.artist || 'Unknown Artist'} • {song.analysis.key} • {Math.round(song.analysis.tempo)} BPM
+                        </p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm text-earth-400 mb-1">{formatDuration(song.analysis.duration)}</p>
+                      <Link
+                        to={`/analysis/${song._id}`}
+                        className="text-xs text-accent-green-500 hover:text-accent-green-400 font-medium transition-colors duration-200"
+                      >
+                        View Analysis
+                      </Link>
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-sm text-gray-600">{formatDuration(song.analysis.duration)}</p>
-                    <Link
-                      to={`/analysis/${song._id}`}
-                      className="text-xs text-primary hover:underline"
-                    >
-                      View Analysis
-                    </Link>
-                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-8">
+                <div className="animate-bounce-gentle mb-4">
+                  <Music className="h-16 w-16 text-earth-400 mx-auto" />
                 </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-8">
-              <Music className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-600 mb-4">No songs uploaded yet</p>
-              <Link
-                to="/upload"
-                className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors"
-              >
-                Upload Your First Song
-              </Link>
-            </div>
-          )}
+                <p className="text-earth-300 mb-6 text-lg">No songs uploaded yet</p>
+                <Link
+                  to="/upload"
+                  className="btn-primary inline-flex items-center"
+                >
+                  <Upload className="h-5 w-5 mr-2" />
+                  Upload Your First Song
+                </Link>
+              </div>
+            )}
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-sm border">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
-          <div className="space-y-3">
-            <Link
-              to="/upload"
-              className="flex items-center space-x-3 p-3 bg-primary/5 rounded-lg hover:bg-primary/10 transition-colors"
-            >
-              <div className="bg-primary/10 p-2 rounded-full">
-                <Upload className="h-5 w-5 text-primary" />
-              </div>
-              <div>
-                <h3 className="font-medium text-gray-900">Upload New Song</h3>
-                <p className="text-sm text-gray-600">Analyze a new audio file</p>
-              </div>
-            </Link>
+          <div className="card p-6 animate-slide-up">
+            <h2 className="text-2xl font-bold text-gold-500 mb-6 flex items-center">
+              <BarChart3 className="h-6 w-6 mr-2" />
+              Quick Actions
+            </h2>
+            <div className="space-y-4">
+              <Link
+                to="/upload"
+                className="flex items-center space-x-4 p-4 bg-gradient-to-r from-accent-blue-500/10 to-accent-blue-500/5 rounded-lg border border-accent-blue-500/20 hover:border-accent-blue-500/50 hover:shadow-glow-blue transition-all duration-300 group"
+              >
+                <div className="p-3 bg-accent-blue-500/20 rounded-lg group-hover:bg-accent-blue-500/30 transition-colors duration-300">
+                  <Upload className="h-6 w-6 text-accent-blue-500" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-earth-100 mb-1">Upload New Song</h3>
+                  <p className="text-sm text-earth-400">Analyze a new audio file</p>
+                </div>
+              </Link>
 
-            <Link
-              to="/arrangements"
-              className="flex items-center space-x-3 p-3 bg-green-50 rounded-lg hover:bg-green-100 transition-colors"
-            >
-              <div className="bg-green-100 p-2 rounded-full">
-                <BarChart3 className="h-5 w-5 text-green-600" />
-              </div>
-              <div>
-                <h3 className="font-medium text-gray-900">View Arrangements</h3>
-                <p className="text-sm text-gray-600">Manage your arrangements</p>
-              </div>
-            </Link>
+              <Link
+                to="/arrangements"
+                className="flex items-center space-x-4 p-4 bg-gradient-to-r from-accent-green-500/10 to-accent-green-500/5 rounded-lg border border-accent-green-500/20 hover:border-accent-green-500/50 hover:shadow-glow-green transition-all duration-300 group"
+              >
+                <div className="p-3 bg-accent-green-500/20 rounded-lg group-hover:bg-accent-green-500/30 transition-colors duration-300">
+                  <BarChart3 className="h-6 w-6 text-accent-green-500" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-earth-100 mb-1">View Arrangements</h3>
+                  <p className="text-sm text-earth-400">Manage your arrangements</p>
+                </div>
+              </Link>
+            </div>
           </div>
         </div>
       </div>

@@ -99,129 +99,159 @@ export default function Upload() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Upload Your Song</h1>
-        <p className="text-gray-600">
-          Upload an audio file to get advanced AI-powered analysis and arrangement suggestions
-        </p>
-      </div>
+    <div className="min-h-screen bg-dark-900 py-8">
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-8 animate-fade-in">
+          <h1 className="text-4xl font-bold text-gradient mb-4">Upload Your Song</h1>
+          <p className="text-lg text-earth-300">
+            Upload an audio file to get advanced AI-powered analysis and arrangement suggestions
+          </p>
+        </div>
 
-      <div className="bg-white rounded-lg shadow-sm border p-8">
-        {!file ? (
-          <div
-            {...getRootProps()}
-            className={`border-2 border-dashed rounded-lg p-12 text-center cursor-pointer transition-colors ${
-              isDragActive
-                ? 'border-primary bg-primary/5'
-                : 'border-gray-300 hover:border-primary hover:bg-gray-50'
-            }`}
-          >
-            <input {...getInputProps()} />
-            <div className="flex flex-col items-center space-y-4">
-              <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center">
-                <UploadIcon className="h-8 w-8 text-primary" />
-              </div>
-              <div>
-                <p className="text-lg font-medium text-gray-900 mb-2">
-                  {isDragActive ? 'Drop your audio file here' : 'Drag & drop your audio file here'}
-                </p>
-                <p className="text-gray-600 mb-4">
-                  or click to browse files
-                </p>
-                <p className="text-sm text-gray-500">
-                  Supports MP3, WAV, FLAC, M4A (max 50MB)
-                </p>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div className="space-y-6">
-            <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-              <div className="flex items-center space-x-3">
-                <div className="bg-primary/10 p-2 rounded-full">
-                  <FileAudio className="h-6 w-6 text-primary" />
+        <div className="card p-8 animate-slide-up">
+          {!file ? (
+            <div
+              {...getRootProps()}
+              className={`border-2 border-dashed rounded-xl p-12 text-center cursor-pointer transition-all duration-300 ${
+                isDragActive
+                  ? 'border-accent-blue-500 bg-accent-blue-500/10 shadow-glow-blue'
+                  : 'border-dark-500 hover:border-accent-purple-500 hover:bg-accent-purple-500/5 hover:shadow-glow-purple'
+              }`}
+            >
+              <input {...getInputProps()} />
+              <div className="flex flex-col items-center space-y-6">
+                <div className="animate-bounce-gentle">
+                  <UploadIcon className="h-16 w-16 text-accent-blue-500" />
                 </div>
                 <div>
-                  <p className="font-medium text-gray-900">{file.name}</p>
-                  <p className="text-sm text-gray-600">{formatFileSize(file.size)}</p>
+                  <p className="text-xl font-semibold text-earth-100 mb-3">
+                    {isDragActive ? 'Drop your audio file here' : 'Drag & drop your audio file here'}
+                  </p>
+                  <p className="text-accent-green-500 font-medium mb-6">
+                    or click to browse files
+                  </p>
+                  <div className="inline-flex items-center space-x-2 bg-dark-700 px-4 py-2 rounded-lg border border-dark-500">
+                    <Music className="h-4 w-4 text-gold-500" />
+                    <span className="text-sm text-earth-300">
+                      Supports MP3, WAV, FLAC, M4A (max 50MB)
+                    </span>
+                  </div>
                 </div>
               </div>
-              <button
-                onClick={removeFile}
-                className="text-gray-400 hover:text-red-600 transition-colors"
-              >
-                <X className="h-5 w-5" />
-              </button>
             </div>
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
-                  Song Title *
-                </label>
-                <input
-                  id="title"
-                  type="text"
-                  required
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                  placeholder="Enter song title"
-                />
+          ) : (
+            <div className="space-y-8">
+              <div className="card p-6 border-accent-green-500/30 bg-gradient-to-r from-dark-800 to-dark-700">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-4">
+                    <div className="p-3 bg-accent-blue-500/20 rounded-lg">
+                      <FileAudio className="h-8 w-8 text-accent-blue-500" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-earth-100 text-lg">{file.name}</p>
+                      <p className="text-earth-400">{formatFileSize(file.size)}</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={removeFile}
+                    className="p-2 text-earth-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-all duration-200"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
               </div>
 
-              <div>
-                <label htmlFor="artist" className="block text-sm font-medium text-gray-700 mb-2">
-                  Artist (Optional)
-                </label>
-                <input
-                  id="artist"
-                  type="text"
-                  value={artist}
-                  onChange={(e) => setArtist(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
-                  placeholder="Enter artist name"
-                />
-              </div>
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div>
+                  <label htmlFor="title" className="block text-sm font-semibold text-gold-500 mb-3">
+                    Song Title *
+                  </label>
+                  <input
+                    id="title"
+                    type="text"
+                    required
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    className="input-field w-full"
+                    placeholder="Enter song title"
+                  />
+                </div>
 
-              <button
-                type="submit"
-                disabled={uploading}
-                className="w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
-              >
-                {uploading ? (
-                  <>
-                    <Loader2 className="h-5 w-5 animate-spin" />
-                    <span>Analyzing...</span>
-                  </>
-                ) : (
-                  <>
-                    <Music className="h-5 w-5" />
-                    <span>Upload & Analyze</span>
-                  </>
-                )}
-              </button>
-            </form>
+                <div>
+                  <label htmlFor="artist" className="block text-sm font-semibold text-gold-500 mb-3">
+                    Artist (Optional)
+                  </label>
+                  <input
+                    id="artist"
+                    type="text"
+                    value={artist}
+                    onChange={(e) => setArtist(e.target.value)}
+                    className="input-field w-full"
+                    placeholder="Enter artist name"
+                  />
+                </div>
 
-            {uploading && (
-              <div className="text-center text-sm text-gray-600">
-                <p>This may take a few moments while we analyze your audio...</p>
-              </div>
-            )}
-          </div>
-        )}
-      </div>
+                <button
+                  type="submit"
+                  disabled={uploading}
+                  className={`w-full btn-primary text-lg py-4 flex items-center justify-center ${
+                    uploading ? 'opacity-50 cursor-not-allowed' : ''
+                  }`}
+                >
+                  {uploading ? (
+                    <>
+                      <Loader2 className="h-6 w-6 animate-spin mr-3" />
+                      <span>Analyzing...</span>
+                    </>
+                  ) : (
+                    <>
+                      <UploadIcon className="h-6 w-6 mr-3" />
+                      <span>Upload & Analyze</span>
+                    </>
+                  )}
+                </button>
+              </form>
 
-      <div className="mt-8 bg-blue-50 rounded-lg p-6">
-        <h3 className="font-semibold text-blue-900 mb-2">What happens next?</h3>
-        <ul className="text-sm text-blue-800 space-y-1">
-          <li>• Advanced audio analysis using AI-powered Librosa</li>
-          <li>• Detection of song structure (intro, verse, chorus, bridge, outro)</li>
-          <li>• Musical feature extraction (tempo, key, energy, danceability)</li>
-          <li>• AI-generated arrangement suggestions</li>
-          <li>• Interactive timeline for manual editing</li>
-        </ul>
+              {uploading && (
+                <div className="text-center p-4 bg-accent-blue-500/10 rounded-lg border border-accent-blue-500/20">
+                  <Music className="h-6 w-6 text-accent-blue-500 mx-auto mb-2 animate-pulse" />
+                  <p className="text-accent-blue-500 font-medium">
+                    This may take a few moments while we analyze your audio...
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        <div className="card p-8 mt-8 animate-slide-up">
+          <h3 className="text-xl font-bold text-gold-500 mb-6 flex items-center">
+            <Music className="h-6 w-6 mr-2" />
+            What happens next?
+          </h3>
+          <ul className="space-y-3 text-earth-300">
+            <li className="flex items-center space-x-3">
+              <div className="w-2 h-2 bg-accent-blue-500 rounded-full"></div>
+              <span>Advanced audio analysis using AI-powered Librosa</span>
+            </li>
+            <li className="flex items-center space-x-3">
+              <div className="w-2 h-2 bg-accent-green-500 rounded-full"></div>
+              <span>Detection of song structure (intro, verse, chorus, bridge, outro)</span>
+            </li>
+            <li className="flex items-center space-x-3">
+              <div className="w-2 h-2 bg-accent-purple-500 rounded-full"></div>
+              <span>Musical feature extraction (tempo, key, energy, danceability)</span>
+            </li>
+            <li className="flex items-center space-x-3">
+              <div className="w-2 h-2 bg-gold-500 rounded-full"></div>
+              <span>AI-generated arrangement suggestions</span>
+            </li>
+            <li className="flex items-center space-x-3">
+              <div className="w-2 h-2 bg-silver-500 rounded-full"></div>
+              <span>Interactive timeline for manual editing</span>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   )

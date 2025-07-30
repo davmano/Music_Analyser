@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom'
 import axios from 'axios'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import toast from 'react-hot-toast'
-import { Music, Clock, Zap, Key, Activity, ArrowLeft, Save } from 'lucide-react'
+import { Music, Clock, Zap, Key, Activity, ArrowLeft, Save, BarChart as BarChartIcon } from 'lucide-react'
 
 interface Song {
   _id: string
@@ -94,29 +94,13 @@ export default function Analysis() {
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`
   }
 
-  const getSectionColor = (sectionType: string) => {
-    const colors = {
-      intro: 'bg-blue-100 text-blue-800 border-blue-200',
-      verse: 'bg-green-100 text-green-800 border-green-200',
-      chorus: 'bg-purple-100 text-purple-800 border-purple-200',
-      bridge: 'bg-orange-100 text-orange-800 border-orange-200',
-      outro: 'bg-gray-100 text-gray-800 border-gray-200',
-      full_song: 'bg-indigo-100 text-indigo-800 border-indigo-200'
-    }
-    return colors[sectionType as keyof typeof colors] || 'bg-gray-100 text-gray-800 border-gray-200'
-  }
 
   if (loading) {
     return (
-      <div className="max-w-6xl mx-auto">
-        <div className="animate-pulse space-y-6">
-          <div className="h-8 bg-gray-200 rounded w-1/3"></div>
-          <div className="grid md:grid-cols-4 gap-6">
-            {[...Array(4)].map((_, i) => (
-              <div key={i} className="h-24 bg-gray-200 rounded"></div>
-            ))}
-          </div>
-          <div className="h-64 bg-gray-200 rounded"></div>
+      <div className="min-h-screen bg-dark-900 flex justify-center items-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-accent-blue-500/30 border-t-accent-blue-500 mx-auto mb-4"></div>
+          <p className="text-earth-300 text-lg">Loading analysis...</p>
         </div>
       </div>
     )
@@ -124,16 +108,23 @@ export default function Analysis() {
 
   if (!song) {
     return (
-      <div className="max-w-6xl mx-auto text-center py-12">
-        <Music className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Song not found</h2>
-        <p className="text-gray-600 mb-6">The song you're looking for doesn't exist or you don't have access to it.</p>
-        <Link
-          to="/dashboard"
-          className="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors"
-        >
-          Back to Dashboard
-        </Link>
+      <div className="min-h-screen bg-dark-900 flex flex-col items-center justify-center px-4">
+        <div className="text-center animate-fade-in">
+          <div className="animate-bounce-gentle mb-6">
+            <Music className="h-20 w-20 text-earth-400 mx-auto" />
+          </div>
+          <h2 className="text-3xl font-bold text-gradient mb-4">Song not found</h2>
+          <p className="text-earth-300 mb-8 text-lg max-w-md">
+            The song you're looking for doesn't exist or you don't have access to it.
+          </p>
+          <Link
+            to="/dashboard"
+            className="btn-primary inline-flex items-center"
+          >
+            <ArrowLeft className="h-5 w-5 mr-2" />
+            Back to Dashboard
+          </Link>
+        </div>
       </div>
     )
   }
@@ -146,185 +137,216 @@ export default function Analysis() {
   }))
 
   return (
-    <div className="max-w-6xl mx-auto">
-      <div className="flex items-center justify-between mb-8">
-        <div className="flex items-center space-x-4">
-          <Link
-            to="/dashboard"
-            className="text-gray-600 hover:text-primary transition-colors"
+    <div className="min-h-screen bg-dark-900">
+      <div className="max-w-6xl mx-auto px-4 py-8">
+        <div className="flex items-center justify-between mb-8 animate-fade-in">
+          <div className="flex items-center space-x-4">
+            <Link
+              to="/dashboard"
+              className="text-accent-blue-500 hover:text-accent-blue-400 transition-colors duration-200"
+            >
+              <ArrowLeft className="h-6 w-6" />
+            </Link>
+            <div>
+              <h1 className="text-4xl font-bold text-gradient">{song.title}</h1>
+              {song.artist && (
+                <p className="text-lg text-earth-300 mt-2">by {song.artist}</p>
+              )}
+            </div>
+          </div>
+          <button
+            onClick={createArrangement}
+            disabled={saving}
+            className="btn-primary text-lg px-8 py-4 disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
           >
-            <ArrowLeft className="h-6 w-6" />
-          </Link>
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">{song.title}</h1>
-            {song.artist && (
-              <p className="text-lg text-gray-600">by {song.artist}</p>
+            {saving ? (
+              <>
+                <div className="animate-spin rounded-full h-5 w-5 border-2 border-white/30 border-t-white mr-3"></div>
+                Creating...
+              </>
+            ) : (
+              <>
+                <Save className="h-6 w-6 mr-3" />
+                Create Arrangement
+              </>
             )}
-          </div>
-        </div>
-        <button
-          onClick={createArrangement}
-          disabled={saving}
-          className="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center space-x-2"
-        >
-          {saving ? (
-            <>
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-              <span>Saving...</span>
-            </>
-          ) : (
-            <>
-              <Save className="h-4 w-4" />
-              <span>Create Arrangement</span>
-            </>
-          )}
-        </button>
-      </div>
-
-      <div className="grid md:grid-cols-4 gap-6 mb-8">
-        <div className="bg-white p-6 rounded-lg shadow-sm border">
-          <div className="flex items-center space-x-3">
-            <div className="bg-blue-100 p-2 rounded-full">
-              <Clock className="h-5 w-5 text-blue-600" />
-            </div>
-            <div>
-              <p className="text-sm font-medium text-gray-600">Duration</p>
-              <p className="text-xl font-bold text-gray-900">
-                {formatDuration(song.analysis.duration)}
-              </p>
-            </div>
-          </div>
+          </button>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-sm border">
-          <div className="flex items-center space-x-3">
-            <div className="bg-green-100 p-2 rounded-full">
-              <Activity className="h-5 w-5 text-green-600" />
-            </div>
-            <div>
-              <p className="text-sm font-medium text-gray-600">Tempo</p>
-              <p className="text-xl font-bold text-gray-900">
-                {Math.round(song.analysis.tempo)} BPM
-              </p>
+        <div className="grid md:grid-cols-4 gap-6 mb-8 animate-slide-up">
+          <div className="card p-6 hover:shadow-glow-blue transition-all duration-300">
+            <div className="flex items-center space-x-3">
+              <div className="p-2 bg-accent-blue-500/20 rounded-lg">
+                <Clock className="h-6 w-6 text-accent-blue-500" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-gold-500">Duration</p>
+                <p className="text-2xl font-bold text-earth-100">
+                  {formatDuration(song.analysis.duration)}
+                </p>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-sm border">
-          <div className="flex items-center space-x-3">
-            <div className="bg-purple-100 p-2 rounded-full">
-              <Key className="h-5 w-5 text-purple-600" />
+          <div className="card p-6 hover:shadow-glow-green transition-all duration-300">
+            <div className="flex items-center space-x-3">
+              <div className="p-2 bg-accent-green-500/20 rounded-lg">
+                <Activity className="h-6 w-6 text-accent-green-500" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-gold-500">Tempo</p>
+                <p className="text-2xl font-bold text-earth-100">
+                  {Math.round(song.analysis.tempo)} BPM
+                </p>
+              </div>
             </div>
-            <div>
-              <p className="text-sm font-medium text-gray-600">Key</p>
-              <p className="text-xl font-bold text-gray-900">{song.analysis.key}</p>
+          </div>
+
+          <div className="card p-6 hover:shadow-glow-purple transition-all duration-300">
+            <div className="flex items-center space-x-3">
+              <div className="p-2 bg-accent-purple-500/20 rounded-lg">
+                <Key className="h-6 w-6 text-accent-purple-500" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-gold-500">Key</p>
+                <p className="text-2xl font-bold text-earth-100">{song.analysis.key}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="card p-6 hover:shadow-glow-gold transition-all duration-300">
+            <div className="flex items-center space-x-3">
+              <div className="p-2 bg-gold-500/20 rounded-lg">
+                <Zap className="h-6 w-6 text-gold-500" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-gold-500">Energy</p>
+                <p className="text-2xl font-bold text-earth-100">
+                  {Math.round(song.analysis.energy * 100)}%
+                </p>
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-sm border">
-          <div className="flex items-center space-x-3">
-            <div className="bg-orange-100 p-2 rounded-full">
-              <Zap className="h-5 w-5 text-orange-600" />
-            </div>
-            <div>
-              <p className="text-sm font-medium text-gray-600">Energy</p>
-              <p className="text-xl font-bold text-gray-900">
-                {Math.round(song.analysis.energy * 100)}%
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="grid md:grid-cols-2 gap-8 mb-8">
-        <div className="bg-white p-6 rounded-lg shadow-sm border">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">Song Structure</h2>
-          <div className="space-y-3">
-            {song.analysis.sections.map((section, index) => (
-              <div
-                key={index}
-                className={`p-3 rounded-lg border ${getSectionColor(section.sectionType)}`}
-              >
-                <div className="flex justify-between items-center">
-                  <div>
-                    <h3 className="font-medium capitalize">{section.sectionType.replace('_', ' ')}</h3>
-                    <p className="text-sm opacity-75">
-                      {formatTime(section.startTime)} - {formatTime(section.endTime)}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-sm font-medium">
-                      {formatDuration(section.endTime - section.startTime)}
-                    </p>
-                    <p className="text-xs opacity-75">
-                      {Math.round(section.confidence * 100)}% confidence
-                    </p>
+        <div className="grid md:grid-cols-2 gap-8 mb-8">
+          <div className="card p-6 animate-slide-up">
+            <h2 className="text-2xl font-bold text-gold-500 mb-6 flex items-center">
+              <Music className="h-6 w-6 mr-2" />
+              Song Structure
+            </h2>
+            <div className="space-y-3">
+              {song.analysis.sections.map((section, index) => (
+                <div
+                  key={index}
+                  className="p-4 bg-dark-700 rounded-lg border border-dark-500 hover:border-accent-blue-500/50 transition-all duration-200"
+                >
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <h3 className="font-semibold text-earth-100 capitalize mb-1">
+                        {section.sectionType.replace('_', ' ')}
+                      </h3>
+                      <p className="text-sm text-earth-400">
+                        {formatTime(section.startTime)} - {formatTime(section.endTime)}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-semibold text-accent-green-500 mb-1">
+                        {formatDuration(section.endTime - section.startTime)}
+                      </p>
+                      <p className="text-xs text-earth-400">
+                        {Math.round(section.confidence * 100)}% confidence
+                      </p>
+                    </div>
                   </div>
                 </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="card p-6 animate-slide-up">
+            <h2 className="text-2xl font-bold text-gold-500 mb-6 flex items-center">
+              <BarChartIcon className="h-6 w-6 mr-2" />
+              Section Duration Chart
+            </h2>
+            <div className="bg-dark-700 p-4 rounded-lg">
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#4a4a4a" />
+                  <XAxis 
+                    dataKey="name" 
+                    tick={{ fill: '#d6d3d1', fontSize: 12 }}
+                    axisLine={{ stroke: '#6b7280' }}
+                  />
+                  <YAxis 
+                    tick={{ fill: '#d6d3d1', fontSize: 12 }}
+                    axisLine={{ stroke: '#6b7280' }}
+                  />
+                  <Tooltip 
+                    formatter={(value: number) => [`${value.toFixed(1)}s`, 'Duration']}
+                    labelFormatter={(label) => `Section: ${label}`}
+                    contentStyle={{
+                      backgroundColor: '#2a2a2a',
+                      border: '1px solid #4a4a4a',
+                      borderRadius: '8px',
+                      color: '#d6d3d1'
+                    }}
+                  />
+                  <Bar dataKey="duration" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-8 mb-8">
+          <div className="card p-6 animate-slide-up">
+            <h2 className="text-2xl font-bold text-gold-500 mb-6 flex items-center">
+              <Activity className="h-6 w-6 mr-2" />
+              Musical Features
+            </h2>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center p-3 bg-dark-700 rounded-lg">
+                <span className="text-earth-300">Danceability</span>
+                <span className="font-semibold text-accent-green-500">{Math.round(song.analysis.danceability * 100)}%</span>
               </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="bg-white p-6 rounded-lg shadow-sm border">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">Section Duration Chart</h2>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip 
-                formatter={(value: number) => [`${value.toFixed(1)}s`, 'Duration']}
-                labelFormatter={(label) => `Section: ${label}`}
-              />
-              <Bar dataKey="duration" fill="#3b82f6" />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-
-      <div className="grid md:grid-cols-2 gap-8">
-        <div className="bg-white p-6 rounded-lg shadow-sm border">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">Musical Features</h2>
-          <div className="space-y-4">
-            <div className="flex justify-between">
-              <span className="text-gray-600">Danceability</span>
-              <span className="font-medium">{Math.round(song.analysis.danceability * 100)}%</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-600">Time Signature</span>
-              <span className="font-medium">{song.analysis.timeSignature}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-600">Beat Count</span>
-              <span className="font-medium">{song.analysis.rhythmFeatures.beatCount}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-600">Onset Count</span>
-              <span className="font-medium">{song.analysis.rhythmFeatures.onsetCount}</span>
+              <div className="flex justify-between items-center p-3 bg-dark-700 rounded-lg">
+                <span className="text-earth-300">Time Signature</span>
+                <span className="font-semibold text-earth-100">{song.analysis.timeSignature}</span>
+              </div>
+              <div className="flex justify-between items-center p-3 bg-dark-700 rounded-lg">
+                <span className="text-earth-300">Beat Count</span>
+                <span className="font-semibold text-earth-100">{song.analysis.rhythmFeatures.beatCount}</span>
+              </div>
+              <div className="flex justify-between items-center p-3 bg-dark-700 rounded-lg">
+                <span className="text-earth-300">Onset Count</span>
+                <span className="font-semibold text-earth-100">{song.analysis.rhythmFeatures.onsetCount}</span>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-sm border">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">Spectral Analysis</h2>
-          <div className="space-y-4">
-            <div className="flex justify-between">
-              <span className="text-gray-600">Spectral Centroid</span>
-              <span className="font-medium">{Math.round(song.analysis.spectralFeatures.spectralCentroidMean)} Hz</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-600">Spectral Rolloff</span>
-              <span className="font-medium">{Math.round(song.analysis.spectralFeatures.spectralRolloffMean)} Hz</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-600">Spectral Bandwidth</span>
-              <span className="font-medium">{Math.round(song.analysis.spectralFeatures.spectralBandwidthMean)} Hz</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-600">Zero Crossing Rate</span>
-              <span className="font-medium">{song.analysis.spectralFeatures.zeroCrossingRateMean.toFixed(3)}</span>
+          <div className="card p-6 animate-slide-up">
+            <h2 className="text-2xl font-bold text-gold-500 mb-6 flex items-center">
+              <Zap className="h-6 w-6 mr-2" />
+              Spectral Analysis
+            </h2>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center p-3 bg-dark-700 rounded-lg">
+                <span className="text-earth-300">Spectral Centroid</span>
+                <span className="font-semibold text-accent-blue-500">{Math.round(song.analysis.spectralFeatures.spectralCentroidMean)} Hz</span>
+              </div>
+              <div className="flex justify-between items-center p-3 bg-dark-700 rounded-lg">
+                <span className="text-earth-300">Spectral Rolloff</span>
+                <span className="font-semibold text-accent-blue-500">{Math.round(song.analysis.spectralFeatures.spectralRolloffMean)} Hz</span>
+              </div>
+              <div className="flex justify-between items-center p-3 bg-dark-700 rounded-lg">
+                <span className="text-earth-300">Spectral Bandwidth</span>
+                <span className="font-semibold text-accent-blue-500">{Math.round(song.analysis.spectralFeatures.spectralBandwidthMean)} Hz</span>
+              </div>
+              <div className="flex justify-between items-center p-3 bg-dark-700 rounded-lg">
+                <span className="text-earth-300">Zero Crossing Rate</span>
+                <span className="font-semibold text-earth-100">{song.analysis.spectralFeatures.zeroCrossingRateMean.toFixed(3)}</span>
+              </div>
             </div>
           </div>
         </div>
