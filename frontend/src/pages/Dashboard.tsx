@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
 import { useAuthStore } from '../store/authStore'
-import { Music, Upload, BarChart3, Clock, TrendingUp } from 'lucide-react'
+import { Music, Upload, BarChart3, TrendingUp } from 'lucide-react'
 import toast from 'react-hot-toast'
 
 interface Song {

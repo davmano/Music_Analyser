@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom'
 import axios from 'axios'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import toast from 'react-hot-toast'
-import { Music, Clock, Zap, Key, Activity, ArrowLeft, Save, Edit } from 'lucide-react'
+import { Music, Clock, Zap, Key, Activity, ArrowLeft, Save } from 'lucide-react'
 
 interface Song {
   _id: string
@@ -68,7 +68,7 @@ export default function Analysis() {
 
     setSaving(true)
     try {
-      const response = await axios.post(`${API_URL}/api/arrangements`, {
+      await axios.post(`${API_URL}/api/arrangements`, {
         name: `${song.title} - Arrangement`,
         songId: song._id,
         description: 'Auto-generated arrangement from analysis'

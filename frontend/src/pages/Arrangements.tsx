@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
 import toast from 'react-hot-toast'
-import { Settings, Music, Plus, Edit, Trash2, Eye, Calendar } from 'lucide-react'
+import { Settings, Music, Plus, Trash2, Eye, Calendar } from 'lucide-react'
 
 interface Arrangement {
   _id: string
