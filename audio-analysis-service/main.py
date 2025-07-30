@@ -214,8 +214,12 @@ async def analyze_audio(
                 os.unlink(tmp_file_path)
             except:
                 pass
-        logger.error(f"Error analyzing audio: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Error analyzing audio: {str(e)}")
+        error_msg = str(e)
+        logger.error(f"Error analyzing audio: {error_msg}")
+        logger.error(f"Exception type: {type(e).__name__}")
+        import traceback
+        logger.error(f"Traceback: {traceback.format_exc()}")
+        raise HTTPException(status_code=500, detail=f"Error analyzing audio: {error_msg}")
 
 @app.get("/")
 async def root():
